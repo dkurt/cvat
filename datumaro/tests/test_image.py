@@ -30,9 +30,12 @@ class ImageTest(TestCase):
 
     def test_save_and_load_backends(self):
         backends = image_module._IMAGE_BACKENDS
-        for save_backend, load_backend in product(backends, backends):
+        for save_backend, load_backend, c in product(backends, backends, [1, 3]):
             with TestDir() as test_dir:
-                src_image = np.random.randint(0, 255 + 1, (2, 4, 3))
+                if c == 1:
+                    src_image = np.random.randint(0, 255 + 1, (2, 4))
+                else:
+                    src_image = np.random.randint(0, 255 + 1, (2, 4, c))
                 image_path = osp.join(test_dir.path, 'img.png')
 
                 self._test_can_save_and_load(src_image, image_path,
